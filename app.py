@@ -14,6 +14,20 @@ data = pd.read_excel("DRM_Project_Output.xlsx")
 data["Date"] = pd.to_datetime(data["Date"])
 
 
+st.subheader("Market Risk Summary")
+
+lt_returns = np.log(data["LT"] / data["LT"].shift(1)).dropna()
+affle_returns = np.log(data["AFFLE"] / data["AFFLE"].shift(1)).dropna()
+
+lt_vol = lt_returns.std() * np.sqrt(252)
+affle_vol = affle_returns.std() * np.sqrt(252)
+
+col1, col2 = st.columns(2)
+
+col1.metric("LT Annual Volatility", f"{lt_vol:.2%}")
+col2.metric("AFFLE Annual Volatility", f"{affle_vol:.2%}")
+
+
 st.sidebar.header("Dashboard Controls")
 
 stock_choice = st.sidebar.selectbox(
@@ -151,5 +165,6 @@ st.divider()
 
 
 st.subheader("Dataset Preview")
+
 
 st.dataframe(filtered_data.tail(10))
